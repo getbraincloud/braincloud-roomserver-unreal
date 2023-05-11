@@ -5,15 +5,13 @@
 
 void ADedicatedDemoGameMode::BeginPlay()
 {
-    Super::BeginPlay();
-
     if (GetNetMode() == NM_DedicatedServer) // Make sure we are dedicated
     {
         // Load environment variables passed in by brainCloud to our container.
         FString appId = getenv("APP_ID");
         FString serverName = getenv("SERVER_NAME");
         FString serverSecret = getenv("SERVER_SECRET");
-        FString lobbyId = getenv("LOBBY_ID");
+        lobbyId = getenv("LOBBY_ID");
 
         FString serverUrl = "https://api.internal.braincloudservers.com/s2sdispatcher";
 
@@ -33,31 +31,30 @@ void ADedicatedDemoGameMode::BeginPlay()
             UE_LOG(LogBrainCloudS2S, Log, TEXT("Tick enabled"));
         }
 
-        // Request Lobby data.
-        // Check out S2S Explorer in the portal to know more about calls that
-        // can be done.
-        pS2S->request("{\"service\":\"lobby\",\"operation\":\"GET_LOBBY_DATA\",\"data\":{\"lobbyId\":\"" + lobbyId + "\"}}",
-            [this, lobbyId](const FString& result)
-            {
-                // ... Do server setup, decode result json, 
-                // cache user/passcode for validation, etc.
-                //UE_LOG(LogBrainCloudS2S, Log, TEXT("S2S lobbyData: %s"), *result);
-
-                // Notify brainCloud that our server is ready
-                pS2S->request("{\"service\":\"lobby\",\"operation\":\"SYS_ROOM_READY\",\"data\":{\"lobbyId\":\"" + lobbyId + "\"}}", nullptr);
-            });
     }
 
+    Super::BeginPlay();
 }
 
 void ADedicatedDemoGameMode::Tick(float DeltaTime)
 {
-    UE_LOG(LogBrainCloudS2S, Log, TEXT("GAME MODE CPP Tick"));
+    Super::Tick(DeltaTime);
+}
+
+void ADedicatedDemoGameMode::S2SRequest(const FString& requestJson, FCustomCallbackDelegate Callback)
+{
+    pS2S->request(requestJson,
+        [this, Callback](const FString& result)
+        {
+            Callback.ExecuteIfBound(result);
+        });
+}
+
+void ADedicatedDemoGameMode::RunCallbacks()
+{
     if (GetNetMode() == NM_DedicatedServer && HasAuthority()) {
         if (pS2S.IsValid()) {
             pS2S->runCallbacks();
         }
     }
-
-    Super::Tick(DeltaTime);
 }

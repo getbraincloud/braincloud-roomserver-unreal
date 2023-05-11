@@ -7,6 +7,7 @@
 #include <BrainCloudS2S.h>
 #include "DedicatedDemoGameMode.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FCustomCallbackDelegate, const FString&, OutputString);
 
 UCLASS(minimalapi)
 class ADedicatedDemoGameMode : public AGameModeBase
@@ -19,8 +20,19 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud S2S")
+		void S2SRequest(const FString& requestJson, FCustomCallbackDelegate Callback);
+
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud S2S")
+		void RunCallbacks();
+
+	UPROPERTY(BlueprintReadOnly)
+		FString lobbyId;
+
 private:
 	TSharedPtr<UBrainCloudS2S> pS2S;
+
+	
 };
 
 
