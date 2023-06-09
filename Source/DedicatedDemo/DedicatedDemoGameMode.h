@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud S2S")
 		void RunCallbacks();
 
+	UFUNCTION(BlueprintCallable, Category = "Dedicated Server")
+		void ShutdownServer();
+
 	UPROPERTY(BlueprintReadOnly)
 		FString lobbyId;
 

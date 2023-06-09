@@ -5,7 +5,7 @@
 
 void ADedicatedDemoGameMode::BeginPlay()
 {
-    if (GetNetMode() == NM_DedicatedServer) // Make sure we are dedicated
+    if (GetNetMode() == NM_DedicatedServer && HasAuthority()) // Make sure we are dedicated
     {
         // Load environment variables passed in by brainCloud to our container.
         FString appId = getenv("APP_ID");
@@ -30,7 +30,6 @@ void ADedicatedDemoGameMode::BeginPlay()
             PrimaryActorTick.bCanEverTick = true;
             UE_LOG(LogBrainCloudS2S, Log, TEXT("Tick enabled"));
         }
-
     }
 
     Super::BeginPlay();
@@ -43,11 +42,15 @@ void ADedicatedDemoGameMode::Tick(float DeltaTime)
 
 void ADedicatedDemoGameMode::S2SRequest(const FString& requestJson, FCustomCallbackDelegate Callback)
 {
-    pS2S->request(requestJson,
-        [this, Callback](const FString& result)
-        {
-            Callback.ExecuteIfBound(result);
-        });
+    if (GetNetMode() == NM_DedicatedServer && HasAuthority()) {
+        if (pS2S.IsValid()) {
+            pS2S->request(requestJson,
+                [this, Callback](const FString& result)
+                {
+                    Callback.ExecuteIfBound(result);
+                });
+        }
+    }
 }
 
 void ADedicatedDemoGameMode::RunCallbacks()
@@ -57,4 +60,10 @@ void ADedicatedDemoGameMode::RunCallbacks()
             pS2S->runCallbacks();
         }
     }
+}
+
+void ADedicatedDemoGameMode::ShutdownServer()
+{
+    UE_LOG(LogBrainCloudS2S, Log, TEXT("Server shutting down"));
+    GIsRequestingExit = true;
 }

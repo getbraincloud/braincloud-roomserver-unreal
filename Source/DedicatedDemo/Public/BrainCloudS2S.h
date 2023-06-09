@@ -121,7 +121,7 @@ private:
     FString _sessionId = "";
 
     double _heartbeatStartTime = 0;
-    double _heartbeatInverval;
+    double _heartbeatInterval;
 
     TArray<TSharedPtr<Request>> _requestQueue;
 };

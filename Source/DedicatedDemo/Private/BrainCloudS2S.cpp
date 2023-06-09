@@ -13,7 +13,7 @@ DEFINE_LOG_CATEGORY(LogBrainCloudS2S);
 static const int SERVER_SESSION_EXPIRED = 40365;
 
 // 30 minutes heartbeat interval
-static const int HEARTBEAT_INTERVALE_S = 60.0 * 30.0;
+static const int HEARTBEAT_INTERVALE_S = 20;
 
 UBrainCloudS2S::UBrainCloudS2S()
 {
@@ -30,7 +30,7 @@ UBrainCloudS2S::UBrainCloudS2S(const FString& appId,
     , _url(url)
     , _state(State::Disconnected)
     , _autoAuth(autoAuth)
-    , _heartbeatInverval(HEARTBEAT_INTERVALE_S)
+    , _heartbeatInterval(HEARTBEAT_INTERVALE_S)
 {
 }
 
@@ -58,7 +58,7 @@ void UBrainCloudS2S::Init(const FString& appId,
     _url = url;
     _autoAuth = autoAuth;
     _state = State::Disconnected;
-    _heartbeatInverval = HEARTBEAT_INTERVALE_S;
+    _heartbeatInterval = HEARTBEAT_INTERVALE_S;
 }
 
 void UBrainCloudS2S::authenticate(const US2SCallback& callback)
@@ -180,7 +180,7 @@ void UBrainCloudS2S::CheckAuthCredentials(TSharedPtr<FJsonObject> authResponse)
         const auto& pData = authResponse->GetObjectField("data");
         if (pData->HasField("heartbeatSeconds"))
         {
-            _heartbeatInverval = pData->GetNumberField("heartbeatSeconds");
+            //_heartbeatInterval = pData->GetNumberField("heartbeatSeconds");
             //_heartbeatInverval = 300;
         }
         if (pData->HasField("sessionId"))
@@ -189,7 +189,7 @@ void UBrainCloudS2S::CheckAuthCredentials(TSharedPtr<FJsonObject> authResponse)
         }
         _heartbeatStartTime = FPlatformTime::Seconds();
         _state = State::Authenticated;
-        UE_LOG(LogBrainCloudS2S, Log, TEXT("S2S Authenticated"));
+        UE_LOG(LogBrainCloudS2S, Log, TEXT("S2S Authenticated - set heartbeatInterval to: %d"), _heartbeatInterval);
     }
     else
     {
@@ -366,7 +366,13 @@ void UBrainCloudS2S::runCallbacks()
     {
         auto now = FPlatformTime::Seconds();
         auto timeDiff = now - _heartbeatStartTime;
-        if (timeDiff >= _heartbeatInverval)
+
+        FString timeDiffstr = FString::SanitizeFloat(timeDiff);
+        FString heartbeatIntervalStr = FString::SanitizeFloat(_heartbeatInterval);
+        FString heartbeatStartTimeStr = FString::SanitizeFloat(_heartbeatStartTime);
+
+        UE_LOG(LogBrainCloudS2S, Log, TEXT("S2S heartbeat info: timeDiff: %s heartbeatInterval: %s heartbeatStartTime %s"), *timeDiffstr, *heartbeatIntervalStr, *heartbeatStartTimeStr);
+        if (timeDiff >= _heartbeatInterval)
         {
             sendHeartbeat();
             _heartbeatStartTime = now;
