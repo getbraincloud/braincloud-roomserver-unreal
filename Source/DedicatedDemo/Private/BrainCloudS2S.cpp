@@ -13,7 +13,7 @@ DEFINE_LOG_CATEGORY(LogBrainCloudS2S);
 static const int SERVER_SESSION_EXPIRED = 40365;
 
 // 30 minutes heartbeat interval
-static const int HEARTBEAT_INTERVALE_S = 20;
+static const int HEARTBEAT_INTERVALE_S = 60 * 30;
 
 UBrainCloudS2S::UBrainCloudS2S()
 {
@@ -180,7 +180,7 @@ void UBrainCloudS2S::CheckAuthCredentials(TSharedPtr<FJsonObject> authResponse)
         const auto& pData = authResponse->GetObjectField("data");
         if (pData->HasField("heartbeatSeconds"))
         {
-            //_heartbeatInterval = pData->GetNumberField("heartbeatSeconds");
+            _heartbeatInterval = pData->GetNumberField("heartbeatSeconds");
             //_heartbeatInverval = 300;
         }
         if (pData->HasField("sessionId"))
@@ -371,7 +371,7 @@ void UBrainCloudS2S::runCallbacks()
         FString heartbeatIntervalStr = FString::SanitizeFloat(_heartbeatInterval);
         FString heartbeatStartTimeStr = FString::SanitizeFloat(_heartbeatStartTime);
 
-        UE_LOG(LogBrainCloudS2S, Log, TEXT("S2S heartbeat info: timeDiff: %s heartbeatInterval: %s heartbeatStartTime %s"), *timeDiffstr, *heartbeatIntervalStr, *heartbeatStartTimeStr);
+        //UE_LOG(LogBrainCloudS2S, Log, TEXT("S2S heartbeat info: timeDiff: %s heartbeatInterval: %s heartbeatStartTime %s"), *timeDiffstr, *heartbeatIntervalStr, *heartbeatStartTimeStr);
         if (timeDiff >= _heartbeatInterval)
         {
             sendHeartbeat();
