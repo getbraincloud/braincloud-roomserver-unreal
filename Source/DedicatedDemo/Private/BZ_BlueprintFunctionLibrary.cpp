@@ -7,42 +7,6 @@
 #include <WebSockets/Public/WebSocketsModule.h>
 #include "Math/RandomStream.h"
 
-
-void UBZ_BlueprintFunctionLibrary::TestWebSocket(FString ServerURL)
-{
-	TSharedPtr<IWebSocket> WebSocket = FWebSocketsModule::Get().CreateWebSocket(ServerURL);
-
-    WebSocket->OnMessage().AddLambda([](const FString& message)
-        {
-            UE_LOG(LogTemp, Log, TEXT("[WebSocket] Message received: %s"), *message);
-        });
-
-    WebSocket->OnConnected().AddLambda([WebSocket]()
-        {
-            UE_LOG(LogTemp, Log, TEXT("[WebSocket] connected"));
-
-            FRandomStream RandStream;
-            
-
-            for (int i = 0; i <= 10; i++) {
-                FString packetToSend = FString::Printf(TEXT("Testing %d"), RandStream.RandRange(0, 100));
-                WebSocket->Send(packetToSend);
-            }
-        });
-
-    WebSocket->OnMessageSent().AddLambda([](const FString& message)
-        {
-            UE_LOG(LogTemp, Log, TEXT("[WebSocket] Message sent: %s"), *message);
-        });
-
-
-    if (WebSocket.IsValid())
-    {
-        WebSocket->Connect();
-        UE_LOG(LogTemp, Log, TEXT("[WebSocket] Connecting..."));
-    }
-}
-
 UBrainCloudAppData* UBZ_BlueprintFunctionLibrary::GetBCAppData()
 {
     UBrainCloudAppData* appData = NewObject<UBrainCloudAppData>();

@@ -15,9 +15,6 @@ class DEDICATEDDEMO_API UBZ_BlueprintFunctionLibrary : public UBlueprintFunction
 {
 	GENERATED_BODY()
 
-		UFUNCTION(BlueprintCallable, Category = "WinHTTP Tests")
-		static void TestWebSocket(FString ServerURL);
-
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Initialization")
 		static UBrainCloudAppData* GetBCAppData();
 };
