@@ -10,7 +10,7 @@ https://portalx.braincloudservers.com/
 
 2. Make an account on DockerHub and create a Docker Repo for your dedicated server container
 
-3. In Servers->My Servers create a new server, you can call this `dedicatedserver` and set the `Server Type` to `Room Server (hosted)` then provide the Docker Registry and Docker Repo you created in the previous step.
+3. In the brainCloud portal, select your app and go to Design-> Servers->My Servers create a new server, you can call this `dedicatedserver` and set the `Server Type` to `Room Server (hosted)` then provide the Docker Registry and Docker Repo you created in the previous step.
 
 4. In Multiplayer->Lobbies set up a new lobby type and call it `DED_FPS` and set the Server of this lobby to the one you created in the previous step, `dedicatedserver`. Also make sure `Disband on start` is unchecked in the lobby rules
 
