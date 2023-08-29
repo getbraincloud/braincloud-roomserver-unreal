@@ -84,7 +84,7 @@ Build/*
 BCFPS/DevBuild/
 
 #BrainCloud App Settings
-Config/BrainCloudSettings.*
+#Config/BrainCloudSettings.*
 
 #Exported packages
 Exports/
