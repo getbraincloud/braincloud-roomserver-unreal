@@ -14,7 +14,7 @@
 PROJECTNAME=DedicatedDemo
 TARGET=MAC
 
-if [[ "$3" !=  "nosign" ]];
+if [[ "${TARGET}" ==  "IOS" ]];
 then
 	ModeString='-distribution'
 fi
@@ -32,6 +32,4 @@ mkdir -p "$WORKSPACE/artifacts/${PROJECTNAME}-${TARGET}"
 
 "${UE_INSTALL_PATH}/Engine/Build/BatchFiles/Mac/Build.sh" ${PROJECTNAME}Client Mac Development -Project="$WORKSPACE/$PROJECTNAME.uproject" 
  
- #"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -rocket -nocompile -compileeditor -installed -nop4 -project="$WORKSPACE/$PROJECTNAME.uproject" -cook -stage -archive -archivedirectory="$WORKSPACE/artifacts/${PROJECTNAME}-${TARGET}" -package -clientconfig=Development -clean -pak -prereqs  ${ModeString}  -nodebuginfo -targetplatform=${TARGET} -build -target=${PROJECTNAME} -utf8output 
- 
-#"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -rocket -nocompile -compileeditor -installed -nop4 -project="$WORKSPACE/${PROJECTNAME}.uproject" -cook -stage -archive -archivedirectory=$WORKSPACE/ClientBuild -package -clientconfig=Development -clean -pak -prereqs -allmaps -distribution -nodebuginfo -targetplatform=${TARGET}  -build -utf8output 
+"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -rocket -nocompile -compileeditor -installed -nop4 -project="$WORKSPACE/$PROJECTNAME.uproject" -cook -stage -archive -archivedirectory="$WORKSPACE/artifacts/${PROJECTNAME}-${TARGET}" -package -clientconfig=Development -clean -pak -prereqs  ${ModeString}  -nodebuginfo -targetplatform=${TARGET} -build -target=${PROJECTNAME} -utf8output 
