@@ -24,16 +24,7 @@ https://portalx.braincloudservers.com/
 
 4. In Visual Studio, build the project by selecting Build->Project Only->Build Only DedicatedDemo, do this for each of these Solution Configurations: Development Client, Development Editor and Development Server.
 
-5. Create a file named `BrainCloudSettings.ini` in the Config folder and add your brainCloud app data information in there in this format
-
-```ini
-[Credentials]
-AppId=
-AppSecret=
-ServerUrl=
-Version=
-```
-You can find this information in the brainCloud portal where you have created your App.
+5. Open the brainCloud widget by going to Tools->brainCloud Settings - then you can input your AppID, AppSecret, Server URL and version in there. You can find this information in the brainCloud portal where you have created your App.
 
 6. You should now be able to run the project in Unreal Engine
 
@@ -43,4 +34,6 @@ You can find this information in the brainCloud portal where you have created yo
 
 2. You can now build the linux dedicated server by selecting Platforms->Linux->Cook Content and then Package Project and make sure to select DedicatedDemoServer as your Target
 
-3. Once these steps are complete, you should see the linux server files in the folder you packaged it into, you can then use Docker to create a container for this server and run it or upload it to your DockerHub repo, the one you used to create the Server setting on the portal.
+3. In the DockerFiles folder, there are 2 files to help with creating a docker image of the built server and deploying it to your DockerHub repository. Copy these files into the folder where you have built your Linux server, and then modify the buildAndDeployDocker.bat file to input your DockerHub repository in the appropriate place. Then you can just run the buildAndDeployDocker.bat to build and deploy your server.
+
+4. Once these steps are complete, you should be able to run the game and start a new server instance which will have your latest changes on the server side.
