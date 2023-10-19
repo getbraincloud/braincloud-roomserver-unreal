@@ -8,9 +8,9 @@ void ADedicatedDemoGameMode::BeginPlay()
     if (GetNetMode() == NM_DedicatedServer && HasAuthority()) // Make sure we are dedicated
     {
         // Load environment variables passed in by brainCloud to our container.
-        FString appId = getenv("APP_ID");
-        FString serverName = getenv("SERVER_NAME");
-        FString serverSecret = getenv("SERVER_SECRET");
+        appId = getenv("APP_ID");
+        serverName = getenv("SERVER_NAME");
+        serverSecret = getenv("SERVER_SECRET");
         lobbyId = getenv("LOBBY_ID");
 
         FString serverUrl = "https://api.internal.braincloudservers.com/s2sdispatcher";

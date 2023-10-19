@@ -35,7 +35,9 @@ public:
 private:
 	TSharedPtr<UBrainCloudS2S> pS2S;
 
-	
+	FString serverName;
+	FString serverSecret;
+	FString appId;
 };
 
 
