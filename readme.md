@@ -1,4 +1,4 @@
-# brainCloud S2S example using Unreal Engine dedicated server
+# brainCloud Room Server example using Unreal Engine dedicated server
 
 If you haven't signed up or you want to log into the brainCloud portal, you can do that here:
 
