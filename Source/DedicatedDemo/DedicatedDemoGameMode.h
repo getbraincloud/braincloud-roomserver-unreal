@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include <S2SRTTComms.h>
+#include "S2SRTTComms.h"
 #include "DedicatedDemoGameMode.generated.h"
+
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FS2SCallbackDelegate, const FString&, OutputString);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FS2SRTTCallbackDelegate, const FString&, JsonData);
