@@ -12,7 +12,7 @@
 # use options nosign for android and distribution for ios
 
 PROJECTNAME=DedicatedDemo
-TARGET=MAC
+TARGET=${1:-MAC}
 
 if [[ "${TARGET}" ==  "IOS" ]];
 then
