@@ -8,6 +8,7 @@
 set TARGET=%~1
 if "%TARGET%" == "" set TARGET=Win64
 
+::set SERVERPLATFORM=Linux
 set SERVERPLATFORM=Win64
 
 set PROJECTNAME=DedicatedDemo
@@ -22,7 +23,7 @@ set CultureString=
 ::set CookString=-cookflavor=ECS2
 
 ::Package Project
-call "%UE_INSTALL_PATH%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4 -nocompile -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -installed -nocompileuat -package -server -serverplatform=%SERVERPLATFORM% -noclient -archive -archivedirectory="%WORKSPACE%\DedicatedDemo_Unreal_WindowsServer"
+call "%UE_INSTALL_PATH%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4 -nocompile -nocompileeditor -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -nocompileuat -package -server -serverplatform=%SERVERPLATFORM% -noclient -archive -archivedirectory="%WORKSPACE%\DedicatedDemo_Unreal_WindowsServer"
 
 :: return code for tests
 exit /B %errorlevel%
