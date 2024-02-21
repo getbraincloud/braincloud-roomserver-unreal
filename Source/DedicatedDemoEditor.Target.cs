@@ -12,9 +12,9 @@ public class DedicatedDemoEditorTarget : TargetRules
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
 		ExtraModuleNames.Add("DedicatedDemo");
 		bWithLowLevelTestsOverride = false;
+		bOverrideBuildEnvironment = true;
 		if(Target.Platform == UnrealTargetPlatform.Mac)
 		{
-			bOverrideBuildEnvironment = true;
 			AdditionalCompilerArguments = "-Wno-deprecated-pragma";  // you can add more separated with spaces here
 		}
 	}

@@ -18,7 +18,7 @@ fi
 
 needspush=0
 
-for i in Plugins/BCClient
+for i in Plugins/BCClient Plugins/BrainCloudS2SPlugin
 do
     echo
     git submodule status $i

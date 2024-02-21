@@ -8,7 +8,7 @@ public class DedicatedDemo : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput", "WebSockets" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput", "WebSockets", "BrainCloudS2SPlugin" });
 
         PrivateDependencyModuleNames.AddRange(new string[] { "HTTP", "OnlineSubsystem", "Json", "JsonUtilities" });
     }
