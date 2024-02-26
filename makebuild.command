@@ -12,24 +12,13 @@
 # use options nosign for android and distribution for ios
 
 PROJECTNAME=DedicatedDemo
-TARGET=MAC
+TARGET=${1:-MAC}
 
 if [[ "${TARGET}" ==  "IOS" ]];
 then
 	ModeString='-distribution'
 fi
 
-cd "`dirname "$0"`"
-export WORKSPACE=$PWD
-
-if [ -z "$UE_INSTALL_PATH" ];
-then
-    export UE_INSTALL_PATH='/Users/Shared/Epic Games/UE_5.1.1_Source'
-fi
-
-mkdir -p "$WORKSPACE/artifacts/"
-mkdir -p "$WORKSPACE/artifacts/${PROJECTNAME}-${TARGET}"
-
-"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/Mac/Build.sh" ${PROJECTNAME}Client Mac Development -Project="$WORKSPACE/$PROJECTNAME.uproject" 
+#"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/Mac/Build.sh" ${PROJECTNAME}Client Mac Development -Project="$WORKSPACE/$PROJECTNAME.uproject"
  
-"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -rocket -nocompile -compileeditor -installed -nop4 -project="$WORKSPACE/$PROJECTNAME.uproject" -cook -stage -archive -archivedirectory="$WORKSPACE/artifacts/${PROJECTNAME}-${TARGET}" -package -clientconfig=Development -clean -pak -prereqs  ${ModeString}  -nodebuginfo -targetplatform=${TARGET} -build -target=${PROJECTNAME}Client-utf8output 
+"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -project="$WORKSPACE/$PROJECTNAME.uproject" -nocompile -nocompileeditor -nop4 -cook -stage -archive -archivedirectory="$WORKSPACE/ClientBuild" -package -clientconfig=Development -pak -prereqs  ${ModeString}  -allmaps -nodebuginfo -targetplatform=${TARGET} -build -target=${PROJECTNAME}Client -utf8output -game
