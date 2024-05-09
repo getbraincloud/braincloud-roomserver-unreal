@@ -16,7 +16,7 @@ void ADedicatedDemoGameMode::BeginPlay()
         serverSecret = getenv("SERVER_SECRET");
         lobbyId = getenv("LOBBY_ID");
 
-        FString serverUrl = "https://api.braincloudservers.com/s2sdispatcher";
+        FString serverUrl = "https://api.internal.braincloudservers.com/s2sdispatcher";
 
         // Create S2S context
         pS2S = NewObject<US2SRTTComms>();
