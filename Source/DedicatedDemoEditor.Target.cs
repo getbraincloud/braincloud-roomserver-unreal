@@ -8,7 +8,7 @@ public class DedicatedDemoEditorTarget : TargetRules
 	public DedicatedDemoEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V4;
+		DefaultBuildSettings = BuildSettingsVersion.V3;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("DedicatedDemo");
 		bWithLowLevelTestsOverride = false;

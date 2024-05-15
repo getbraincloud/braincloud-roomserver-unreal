@@ -8,7 +8,7 @@ public class DedicatedDemoTarget : TargetRules
 	public DedicatedDemoTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V4;
+		DefaultBuildSettings = BuildSettingsVersion.V3;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("DedicatedDemo");
 		bWithLowLevelTestsOverride = false;
