@@ -3,12 +3,25 @@
 #include "DedicatedDemoGameMode.h"
 #include <ConvertUtilities.h>
 #include <Kismet/GameplayStatics.h>
+#include <BrainCloudFunctionLibrary.h>
 
 DEFINE_LOG_CATEGORY(DedicatedServerLog);
 
 void ADedicatedDemoGameMode::BeginPlay()
 {
     FModuleManager::Get().LoadModuleChecked(TEXT("WebSockets"));
+    lobbyId = getenv("LOBBY_ID");
+
+    if (!lobbyId.IsEmpty()) {
+        //If lobbyId is provided by environment variables, this typically means we are not running the RSM in debug mode
+        appId = getenv("APP_ID");
+        serverName = getenv("SERVER_NAME");
+        serverSecret = getenv("SERVER_SECRET");
+
+        InitS2S(appId, serverName, serverSecret);
+        OnLobbyAssigned();
+    }
+    //If lobbyId is empty this means the RSM tool is running in debug mode, and will wait for a websocket connection from this server to then send the lobbyId
 
     if (HasAuthority()) {
         PrimaryActorTick.bCanEverTick = true;
@@ -31,12 +44,14 @@ void ADedicatedDemoGameMode::InitS2S(const FString& AppID, const FString& Server
         this->serverName = ServerName;
         this->serverSecret = ServerSecret;
 
-        FString serverUrl = "https://api.internal.braincloudservers.com/s2sdispatcher";
+        FBrainCloudAppDataStruct appData = UBrainCloudFunctionLibrary::GetBCAppData();
+        FString serverUrl = appData.S2SUrl;
 
         // Create S2S context
         pS2S = NewObject<US2SRTTComms>();
         pS2S->AddToRoot();
         pS2S->InitializeS2S(appId, serverName, serverSecret, serverUrl, true, true);
+        S2SInitialized = true;
     }
 }
 
@@ -95,15 +110,58 @@ void ADedicatedDemoGameMode::RunCallbacks()
     }
 }
 
+void ADedicatedDemoGameMode::CloseWebsocketConnection()
+{
+    if (m_connectedSocket && m_connectedSocket->IsConnected()) {
+        m_connectedSocket->Close();
+    }
+}
+
 void ADedicatedDemoGameMode::ShutdownServer()
 {
     UE_LOG(DedicatedServerLog, Log, TEXT("Server shutting down"));
+    CloseWebsocketConnection();
     GIsRequestingExit = true;
+}
+
+BCNetMode ADedicatedDemoGameMode::GetNetModeEnum() const
+{
+    UWorld* world = GetWorld();
+    ENetMode nm = world->GetNetMode();
+
+    BCNetMode result;
+    switch (nm) {
+    case NM_Standalone:
+        result = Standalone;
+        break;
+    case NM_Client:
+        result = Client;
+        break;
+    case NM_DedicatedServer:
+        result = DedicatedServer;
+        break;
+    case NM_ListenServer:
+        result = ListenServer;
+        break;
+    case NM_MAX:
+        result = MAX;
+        break;
+    }
+
+    return result;
 }
 
 void ADedicatedDemoGameMode::OnLobbyAssigned_Implementation()
 {
     UE_LOG(DedicatedServerLog, Log, TEXT("OnLobbyAssigned_Implementation"));
+}
+
+void ADedicatedDemoGameMode::OnRSMConnectError_Implementation(const FString& message)
+{
+}
+
+void ADedicatedDemoGameMode::OnRSMConnectComplete_Implementation()
+{
 }
 
 void ADedicatedDemoGameMode::setupWebSocket(const FString& in_url)
@@ -124,6 +182,7 @@ void ADedicatedDemoGameMode::setupWebSocket(const FString& in_url)
 void ADedicatedDemoGameMode::OnConnectError(const FString& error)
 {
     UE_LOG(DedicatedServerLog, Error, TEXT("Error connecting to RSM Websocket: %s"), *error);
+    OnRSMConnectError(error);
 }
 
 void ADedicatedDemoGameMode::OnClosed()
@@ -139,6 +198,7 @@ void ADedicatedDemoGameMode::OnClosed()
 void ADedicatedDemoGameMode::OnConnectComplete()
 {
     UE_LOG(DedicatedServerLog, Log, TEXT("Successfully connected to RSM Websocket"));
+    OnRSMConnectComplete();
 }
 
 void ADedicatedDemoGameMode::OnReceiveData(const TArray<uint8>& data)
@@ -162,7 +222,7 @@ void ADedicatedDemoGameMode::OnDataProcessed(const FString& message) {
 
     auto op = json->Values["op"]->AsString();
 
-    if (op == "InitS2S") {
+    if (op == "InitS2S" && !S2SInitialized) {
         TSharedPtr<FJsonObject> data = json->Values["data"]->AsObject();
         
         this->appId = data->Values["appId"]->AsString();
@@ -173,7 +233,7 @@ void ADedicatedDemoGameMode::OnDataProcessed(const FString& message) {
 
         InitS2S(appId, serverName, serverSecret);
     }
-    if (op == "AssignLobby") {
+    if (op == "AssignLobby" && lobbyId.IsEmpty()) {
         TSharedPtr<FJsonObject> data = json->Values["data"]->AsObject();
 
         this->lobbyId = data->Values["lobbyId"]->AsString();

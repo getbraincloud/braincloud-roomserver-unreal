@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "S2SRTTComms.h"
 #include <BCClientPlugin/Private/WinWebSocketBase.h>
+#include "GameFramework/Actor.h"
+#include "Engine/EngineBaseTypes.h"
 #include "DedicatedDemoGameMode.generated.h"
 
 
@@ -21,6 +23,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRSMSocketConnectError, const FStrin
 
 DECLARE_LOG_CATEGORY_EXTERN(DedicatedServerLog, Log, All);
 
+UENUM(BlueprintType)
+enum BCNetMode {
+	Standalone,
+	DedicatedServer,
+	ListenServer,
+	Client,
+	MAX
+};
+
 UCLASS(minimalapi)
 class ADedicatedDemoGameMode : public AGameModeBase, public IWinWebSocketBaseCallbacks
 {
@@ -30,6 +41,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud S2S")
@@ -57,13 +69,28 @@ public:
 		void RunCallbacks();
 
 	UFUNCTION(BlueprintCallable, Category = "Dedicated Server")
+		void CloseWebsocketConnection();
+
+	UFUNCTION(BlueprintCallable, Category = "Dedicated Server")
 		void ShutdownServer();
 		
+	UFUNCTION(BlueprintCallable, Category = "Dedicated Server")
+		BCNetMode GetNetModeEnum() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BrainCloud S2S")
 		void OnLobbyAssigned();
 
 	void OnLobbyAssigned_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BrainCloud S2S")
+		void OnRSMConnectError(const FString& message);
+
+	void OnRSMConnectError_Implementation(const FString& message);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BrainCloud S2S")
+		void OnRSMConnectComplete();
+
+	void OnRSMConnectComplete_Implementation();
 
 	UPROPERTY(BlueprintReadOnly)
 		FString lobbyId;
@@ -87,6 +114,7 @@ private:
 	FString serverName;
 	FString serverSecret;
 	FString appId;
+	bool S2SInitialized = false;
 };
 
 
