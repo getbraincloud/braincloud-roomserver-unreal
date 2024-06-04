@@ -14,6 +14,8 @@ https://portalx.braincloudservers.com/
 
 4. In Multiplayer->Lobbies set up a new lobby type and call it `DED_FPS` and set the Server of this lobby to the one you created in the previous step, `dedicatedserver`. Also make sure `Disband on start` is unchecked in the lobby rules
 
+Alternatively, after creating your new app, you can simply go to Admin Tools -> Configuration Data, select Import and select the `bcPortalConfig.bcconfig` file in this projects folder, once imported go to your server settings and make sure to set the room serer manager server url to your IP or hostname as well as the docker repo for your dedicated room server.
+
 ## How to build and run project in Unreal
 
 1. [Follow these instructions to build Unreal Engine from source](https://docs.unrealengine.com/5.1/en-US/building-unreal-engine-from-source/) Make sure to get the proper version, this project is using UE `5.1.1-0+++UE5+Release-5.1`
@@ -43,13 +45,13 @@ https://portalx.braincloudservers.com/
 If you want to debug your server and hit certain breakpoints both in C++ and Blueprints, follow these steps:
 
 1. Get the RSM tool [here](https://github.com/getbraincloud/braincloud-roomserver-devtool) and follow the set up instructions in the readme, then set `config.debug` to true in the `config.js` and run the RSM tool.
-2. Open the Visual Studio solution `DedicatedDemo.sln` file, select Development Editor as your debug configuration ![Alt text](Screenshots\ServerDebugging\SelectDevelopmentEditorDebugConfig.png "Select Development Editor")
- and run a debug session. ![Alt text](Screenshots\ServerDebugging\RunDebug.png "Run debug")
-3. Once the Unreal editor opens, create a client build of the project: ![Alt text](Screenshots\ServerDebugging\PackageClientBuild.png "Create client build") and keep this build for a later step
-4. Open up the map where our server runs, which is `Content\Maps\Stylized_Egypt_Demo` ![Alt text](Screenshots\ServerDebugging\SelectServerMap.png "Select server map")
-5. Select `Play as Listen Server` in the Unreal editor multiplayer play options ![Alt text](Screenshots\ServerDebugging\PlayAsListenServerUnreal.png "Play as listen server") and hit play.
-6. When this first runs, the initial state is an idling server that is waiting to connect to the RSM tool.![Alt text](Screenshots\ServerDebugging\ServerLaunchedDisconnected.png "Server launched disconnected") as long as the RSM tool is running in debug mode, then it should be possible to click the Connect to RSM tool button and see that the connection was successfull.
-7. When connected you should see this message next:  ![Alt text](Screenshots\ServerDebugging\ServerLaunchedConnectedNoLobby.png "Server launched connected") - This means the server is now ready to receive the lobbyId
-8. To send that lobbyId, launch an instance of your built client executable, which you built in step #3 - in that instance, select `RoomServerManager_DedicatedFPS(Local Server)` as the lobby type in the main menu, and then click the Create Game button. ![Alt text](Screenshots\ServerDebugging\SelectRSMLobbyType.png "Select RSM lobby type")
-9. Once in a lobby, start the game. The RSM tool will then receive your request for a room server and send the lobbyId to your running server in the Unreal editor. You should then see your test player join the server.![Alt text](Screenshots\ServerDebugging\ServerLookingAtPlayer.png)
-10. To ensure everything is functional, you can select your connected player in the list on the right, set their name to `Franco` and then click the Kill Player button. ![Alt text](Screenshots\ServerDebugging\serverKillFranco.png "Kill Franco")
+2. Open the Visual Studio solution `DedicatedDemo.sln` file, select Development Editor as your debug configuration ![Alt text](Screenshots/ServerDebugging/SelectDevelopmentEditorDebugConfig.png "Select Development Editor")
+ and run a debug session. ![Alt text](Screenshots/ServerDebugging/RunDebug.png "Run debug")
+3. Once the Unreal editor opens, create a client build of the project: ![Alt text](Screenshots/ServerDebugging/PackageClientBuild.png "Create client build") and keep this build for a later step
+4. Open up the map where our server runs, which is `Content\Maps\Stylized_Egypt_Demo` ![Alt text](Screenshots/ServerDebugging/SelectServerMap.png "Select server map")
+5. Select `Play as Listen Server` in the Unreal editor multiplayer play options ![Alt text](Screenshots/ServerDebugging/PlayAsListenServerUnreal.png "Play as listen server") and hit play.
+6. When this first runs, the initial state is an idling server that is waiting to connect to the RSM tool.![Alt text](Screenshots/ServerDebugging/ServerLaunchedDisconnected.png "Server launched disconnected") as long as the RSM tool is running in debug mode, then it should be possible to click the Connect to RSM tool button and see that the connection was successfull.
+7. When connected you should see this message next:  ![Alt text](Screenshots/ServerDebugging/ServerLaunchedConnectedNoLobby.png "Server launched connected") - This means the server is now ready to receive the lobbyId
+8. To send that lobbyId, launch an instance of your built client executable, which you built in step #3 - in that instance, select `RoomServerManager_DedicatedFPS(Local Server)` as the lobby type in the main menu, and then click the Create Game button. ![Alt text](Screenshots/ServerDebugging/SelectRSMLobbyType.png "Select RSM lobby type")
+9. Once in a lobby, start the game. The RSM tool will then receive your request for a room server and send the lobbyId to your running server in the Unreal editor. You should then see your test player join the server.![Alt text](Screenshots/ServerDebugging/ServerLookingAtPlayer.png)
+10. To ensure everything is functional, you can select your connected player in the list on the right, set their name to `Franco` and then click the Kill Player button. ![Alt text](Screenshots/ServerDebugging/serverKillFranco.png "Kill Franco")
