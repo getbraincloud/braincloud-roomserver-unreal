@@ -51,6 +51,8 @@ void ADedicatedDemoGameMode::InitS2S(const FString& AppID, const FString& Server
         pS2S = NewObject<US2SRTTComms>();
         pS2S->AddToRoot();
         pS2S->InitializeS2S(appId, serverName, serverSecret, serverUrl, true, true);
+        FString version = UBrainCloudFunctionLibrary::GetProjectVersion();
+        UE_LOG(DedicatedServerLog, Log, TEXT("Server running version: %s"), *version);
         S2SInitialized = true;
     }
 }
