@@ -9,7 +9,8 @@ public class DedicatedDemoClientTarget : TargetRules
 	{
 		Type = TargetType.Client;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
-		ExtraModuleNames.Add("DedicatedDemo");
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+        ExtraModuleNames.Add("DedicatedDemo");
 		bWithLowLevelTestsOverride = false;
 		if(Target.Platform == UnrealTargetPlatform.Mac)
 		{
