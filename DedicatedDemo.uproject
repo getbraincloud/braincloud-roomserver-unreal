@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.3",
+	"EngineAssociation": "{D74D3B8F-4B21-1161-52C6-149AFE242AFD}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -28,6 +28,10 @@
 		},
 		{
 			"Name": "JsonBlueprintUtilities",
+			"Enabled": true
+		},
+		{
+			"Name": "Edgegap",
 			"Enabled": true
 		}
 	]

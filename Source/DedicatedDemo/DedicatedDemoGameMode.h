@@ -8,6 +8,9 @@
 #include <BCClientPlugin/Private/WinWebSocketBase.h>
 #include "GameFramework/Actor.h"
 #include "Engine/EngineBaseTypes.h"
+#include "HttpModule.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
 #include "DedicatedDemoGameMode.generated.h"
 
 
@@ -94,6 +97,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 		FString lobbyId;
+
+	void OnDeploymentDeleteResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
 
 private:
 
