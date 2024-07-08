@@ -8,10 +8,12 @@ class FDedicatedDemoModule : public FDefaultGameModuleImpl
 {
 public:
 	virtual void StartupModule() override {
+		FNetworkVersion::IsNetworkCompatibleOverride.BindStatic(&UBCNetVersion::IsNetworkCompatibleOverride);
 		FNetworkVersion::GetLocalNetworkVersionOverride.BindStatic(&UBCNetVersion::GetLocalNetworkVersionOverride);
 	}
 
 	virtual void ShutdownModule() override {
+		FNetworkVersion::IsNetworkCompatibleOverride.Unbind();
 		FNetworkVersion::GetLocalNetworkVersionOverride.Unbind();
 	}
 };

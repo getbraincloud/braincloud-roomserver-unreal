@@ -32,17 +32,18 @@ uint32 UBCNetVersion::GetLocalNetworkVersionOverride()
     {
         minimalVersionString = Parts[0];
     }
-
+    /*
     FString VersionString = FString::Printf(TEXT("%s %s, NetCL: %d, EngineNetVer: %d, GameNetVer: %d"),
         FApp::GetProjectName(),
         *minimalVersionString,
         GetNetworkCompatibleChangelist(),
         FNetworkVersion::GetEngineNetworkProtocolVersion(),
         FNetworkVersion::GetGameNetworkProtocolVersion());
+    */
 
-    CachedNetworkChecksum = FCrc::StrCrc32(*VersionString.ToLower());
+    CachedNetworkChecksum = FCrc::StrCrc32(*minimalVersionString);
 
-    UE_LOG(LogNetVersion, Log, TEXT("%s (Checksum: %u)"), *VersionString, CachedNetworkChecksum);
+    UE_LOG(LogNetVersion, Log, TEXT("%s (Checksum: %u)"), *minimalVersionString, CachedNetworkChecksum);
 
     bHasCachedNetworkChecksum = true;
 
