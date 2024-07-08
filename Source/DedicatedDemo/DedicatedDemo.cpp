@@ -2,6 +2,19 @@
 
 #include "DedicatedDemo.h"
 #include "Modules/ModuleManager.h"
+#include "BCNetVersion.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, DedicatedDemo, "DedicatedDemo" );
+class FDedicatedDemoModule : public FDefaultGameModuleImpl
+{
+public:
+	virtual void StartupModule() override {
+		FNetworkVersion::GetLocalNetworkVersionOverride.BindStatic(&UBCNetVersion::GetLocalNetworkVersionOverride);
+	}
+
+	virtual void ShutdownModule() override {
+		FNetworkVersion::GetLocalNetworkVersionOverride.Unbind();
+	}
+};
+
+IMPLEMENT_PRIMARY_GAME_MODULE(FDedicatedDemoModule, DedicatedDemo, "DedicatedDemo" );
  
