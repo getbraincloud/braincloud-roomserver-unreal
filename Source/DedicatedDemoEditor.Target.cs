@@ -9,7 +9,8 @@ public class DedicatedDemoEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
-		ExtraModuleNames.Add("DedicatedDemo");
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+        ExtraModuleNames.Add("DedicatedDemo");
 		bWithLowLevelTestsOverride = false;
 		bOverrideBuildEnvironment = true;
 		if(Target.Platform == UnrealTargetPlatform.Mac)

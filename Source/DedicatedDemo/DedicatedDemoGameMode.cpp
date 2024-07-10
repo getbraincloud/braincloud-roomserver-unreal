@@ -5,6 +5,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <BrainCloudFunctionLibrary.h>
 
+
 DEFINE_LOG_CATEGORY(DedicatedServerLog);
 
 void ADedicatedDemoGameMode::BeginPlay()
@@ -51,6 +52,8 @@ void ADedicatedDemoGameMode::InitS2S(const FString& AppID, const FString& Server
         pS2S = NewObject<US2SRTTComms>();
         pS2S->AddToRoot();
         pS2S->InitializeS2S(appId, serverName, serverSecret, serverUrl, true, true);
+        FString version = UBrainCloudFunctionLibrary::GetProjectVersion();
+        UE_LOG(DedicatedServerLog, Log, TEXT("Server running version: %s"), *version);
         S2SInitialized = true;
     }
 }
@@ -119,9 +122,31 @@ void ADedicatedDemoGameMode::CloseWebsocketConnection()
 
 void ADedicatedDemoGameMode::ShutdownServer()
 {
-    UE_LOG(DedicatedServerLog, Log, TEXT("Server shutting down"));
-    CloseWebsocketConnection();
-    GIsRequestingExit = true;
+    //if we are running in an EdgeGap container
+    FString deploymentDeleteUrl = getenv("ARBITRIUM_DELETE_URL");
+    FString authToken = getenv("ARBITRIUM_DELETE_TOKEN");
+
+    if (!deploymentDeleteUrl.IsEmpty()) {
+
+        UE_LOG(DedicatedServerLog, Log, TEXT("EdgeGap server shutting down sending request to delete url: %s"), *deploymentDeleteUrl);
+
+        TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+        HttpRequest->SetURL(deploymentDeleteUrl);
+        HttpRequest->SetVerb("DELETE");
+        HttpRequest->SetHeader("authorization", *authToken);
+
+        // HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+        HttpRequest->OnProcessRequestComplete().BindUObject(this, &ADedicatedDemoGameMode::OnDeploymentDeleteResponse);
+
+        // Send the request
+        HttpRequest->ProcessRequest();
+    }
+    else {
+        UE_LOG(DedicatedServerLog, Log, TEXT("Dedicated server shutting down"));
+        CloseWebsocketConnection();
+        //GIsRequestingExit = true;
+        RequestEngineExit("Server shutdown");
+    }
 }
 
 BCNetMode ADedicatedDemoGameMode::GetNetModeEnum() const
@@ -162,6 +187,29 @@ void ADedicatedDemoGameMode::OnRSMConnectError_Implementation(const FString& mes
 
 void ADedicatedDemoGameMode::OnRSMConnectComplete_Implementation()
 {
+}
+
+void ADedicatedDemoGameMode::OnDeploymentDeleteResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
+{
+    if (bSuccess && Response.IsValid())
+    {
+        // Handle the response here, e.g., check the status code
+        int32 StatusCode = Response->GetResponseCode();
+        FString ResponseStr = Response->GetContentAsString();
+
+        // Process the response content as needed
+        UE_LOG(LogTemp, Log, TEXT("DELETE request completed with code %d"), StatusCode);
+        UE_LOG(LogTemp, Log, TEXT("Response: %s"), *ResponseStr);
+
+        UE_LOG(DedicatedServerLog, Log, TEXT("Dedicated server shutting down"));
+        CloseWebsocketConnection();
+        RequestEngineExit("Server shutdown [EdgeGap]");
+    }
+    else
+    {
+        // Handle error
+        UE_LOG(LogTemp, Error, TEXT("DELETE request failed!"));
+    }
 }
 
 void ADedicatedDemoGameMode::setupWebSocket(const FString& in_url)
