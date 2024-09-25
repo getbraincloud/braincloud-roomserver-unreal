@@ -8,9 +8,9 @@ public class DedicatedDemoServerTarget : TargetRules
 	public DedicatedDemoServerTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Server;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
-		ExtraModuleNames.Add("DedicatedDemo");
+		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+        ExtraModuleNames.Add("DedicatedDemo");
 		bWithLowLevelTestsOverride = false;
 		if(Target.Platform == UnrealTargetPlatform.Mac)
 		{
