@@ -217,7 +217,7 @@ void ADedicatedDemoGameMode::setupWebSocket(const FString& in_url)
     if (m_connectedSocket == nullptr)
     {
         m_connectedSocket = NewObject<UWinWebSocketBase>();
-        m_connectedSocket->SetupSocket(in_url, nullptr, true);
+        m_connectedSocket->SetupSocket(in_url, nullptr);
 
         m_connectedSocket->mCallbacks = this;
 
@@ -253,7 +253,7 @@ void ADedicatedDemoGameMode::OnReceiveData(const TArray<uint8>& data)
 {
     UE_LOG(DedicatedServerLog, Log, TEXT("Received Data from RSM websocket"));
 
-    FString parsedMessage = ConvertUtilities::BCBytesToString(data.GetData(), data.Num());
+    FString parsedMessage = ConvertUtilities::BCBytesToString(data);
     OnDataProcessed(parsedMessage);
 }
 
