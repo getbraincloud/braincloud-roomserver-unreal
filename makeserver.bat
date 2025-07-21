@@ -23,7 +23,8 @@ set CultureString=
 ::set CookString=-cookflavor=ECS2
 
 ::Package Project
-call "%UE_INSTALL_PATH%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4 -nocompile -nocompileeditor -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -nocompileuat -package -server -serverplatform=%SERVERPLATFORM% -noclient -archive -archivedirectory="%WORKSPACE%\DedicatedDemo_Unreal_WindowsServer"
+::-serverplatform=%SERVERPLATFORM%
+call "%UE_INSTALL_PATH%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4 -nocompile -nocompileeditor -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -nocompileuat -package -server -targetplatform=Win64 -noclient -archive -archivedirectory="%WORKSPACE%\DedicatedDemo_Unreal_WindowsServer"
 
 :: return code for tests
 exit /B %errorlevel%
