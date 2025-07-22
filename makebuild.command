@@ -20,5 +20,5 @@ then
 fi
 
 #"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/Mac/Build.sh" ${PROJECTNAME}Client Mac Development -Project="$WORKSPACE/$PROJECTNAME.uproject"
- 
-"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -project="$WORKSPACE/$PROJECTNAME.uproject" -nocompile -nocompileeditor -nop4 -cook -stage -archive -archivedirectory="$WORKSPACE/ClientBuild" -package -clientconfig=Development -pak -prereqs  ${ModeString}  -allmaps -nodebuginfo -targetplatform=${TARGET} -build -target=${PROJECTNAME}Client -utf8output -game
+# -nocompile -nocompileeditor -targetplatform=${TARGET}
+"${UE_INSTALL_PATH}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -project="$WORKSPACE/$PROJECTNAME.uproject" -nop4 -cook -stage -archive -archivedirectory="$WORKSPACE/ClientBuild" -package -clientconfig=Development -pak -prereqs  ${ModeString}  -allmaps -nodebuginfo -platform=${TARGET} -build -target=${PROJECTNAME}Client -utf8output -game
