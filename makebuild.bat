@@ -24,7 +24,7 @@ set CultureString=
 
 ::set CookString=-cookflavor=ECS2
 ::-nocompile -nocompileeditor
-call "D:\ProgramFiles\UE_5.1-source\UE-5.1.1\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4  -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -nocompileuat -package -game -archive -archivedirectory="%WORKSPACE%\%PROJECTNAME%_%BCENV%_%TARGET%_%BUILDNUMBER%"
+call "%UE_INSTALL_PATH%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4  -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -nocompileuat -package -game -archive -archivedirectory="%WORKSPACE%\%PROJECTNAME%_%BCENV%_%TARGET%_%BUILDNUMBER%"
 
 
 :: zip this: ${PROJECTNAME}_Win64
