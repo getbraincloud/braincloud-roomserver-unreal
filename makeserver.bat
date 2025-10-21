@@ -9,7 +9,7 @@ set TARGET=%~1
 if "%TARGET%" == "" set TARGET=Win64
 
 ::set SERVERPLATFORM=Linux
-set SERVERPLATFORM=Win64
+set SERVERPLATFORM=Linux
 
 set PROJECTNAME=DedicatedDemo
 if "%PROJECTNAME%" == "" goto Proj_Error
@@ -24,7 +24,7 @@ set CultureString=
 
 ::Package Project
 ::-serverplatform=%SERVERPLATFORM% -nocompile -nocompileeditor
-call "D:\ProgramFiles\UE_5.1-source\UE-5.1.1\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4 -utf8output -platform=%TARGET% %ModeString% -clientconfig=Development -serverconfig=Development -build -cook %CultureString% %CookString% -unversionedcookedcontent -pak -compressed -iostore -nodebuginfo -stage -iterate -prereqs -nocompileuat -package -game -archive -archivedirectory="%WORKSPACE%\%PROJECTNAME%_%BCENV%_%TARGET%_%BUILDNUMBER%"
+call "%UE_INSTALL_PATH%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%WORKSPACE%\%PROJECTNAME%.uproject" -noP4 -utf8output -platform=Linux -serverconfig=Development -build -cook -pak -stage -package -server -archive -archivedirectory="%WORKSPACE%\ServerBuild"
 :: return code for tests
 exit /B %errorlevel%
 
