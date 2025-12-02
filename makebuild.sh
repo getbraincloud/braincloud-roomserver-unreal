@@ -25,6 +25,7 @@ echo --- BRAINCLOUD Archiving to ${ARTIFACTS} ---
 #CultureString=-CookCultures=en
 CultureString=
 
+
 # specify path to UE editor command
 if [[ $UE_VERSION == "4.27" ]];
 then
