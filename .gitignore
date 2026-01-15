@@ -57,6 +57,9 @@ Build/*/**
 # Built data for maps
 *_BuiltData.uasset
 
+# Don't ignore build script
+!makebuild.sh
+
 # ignore starter content
 Content/StarterContent/*
 
