@@ -1,9 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DedicatedDemoGameMode.h"
+#include "S2SRTTComms.h"
 #include <ConvertUtilities.h>
 #include <Kismet/GameplayStatics.h>
 #include <BrainCloudFunctionLibrary.h>
+#include <BrainCloudClient.h>
 
 
 DEFINE_LOG_CATEGORY(DedicatedServerLog);
@@ -49,9 +51,9 @@ void ADedicatedDemoGameMode::InitS2S(const FString& AppID, const FString& Server
         FString serverUrl = appData.S2SUrl;
 
         // Create S2S context
-        pS2S = NewObject<US2SRTTComms>();
+        pS2S = NewObject<UBrainCloudS2S>();
         pS2S->AddToRoot();
-        pS2S->InitializeS2S(appId, serverName, serverSecret, serverUrl, true, true);
+        pS2S->Init(appId, serverName, serverSecret, serverUrl, true);
         FString version = UBrainCloudFunctionLibrary::GetProjectVersion();
         UE_LOG(DedicatedServerLog, Log, TEXT("Server running version: %s"), *version);
         S2SInitialized = true;
@@ -79,7 +81,7 @@ void ADedicatedDemoGameMode::S2SRequest(const FString& requestJson, FS2SCallback
 void ADedicatedDemoGameMode::EnableRTT(FS2SCallbackDelegate OnSuccess, FS2SCallbackDelegate OnFailure)
 {
     if (pS2S != nullptr) {
-        pS2S->enableRTT([this, OnSuccess](const FString& message) {
+        pS2S->GetRTTComms()->enableRTT([this, OnSuccess](const FString& message) {
                 OnSuccess.ExecuteIfBound(message);
             }, [this, OnFailure](const FString& message) {
                 OnFailure.ExecuteIfBound(message);
@@ -90,7 +92,7 @@ void ADedicatedDemoGameMode::EnableRTT(FS2SCallbackDelegate OnSuccess, FS2SCallb
 void ADedicatedDemoGameMode::RegisterS2SRTTCallback(FS2SRTTCallbackDelegate Callback)
 {
     if (pS2S != nullptr) {
-        pS2S->registerRTTCallback(
+        pS2S->GetRTTComms()->registerRTTCallback(
             [this, Callback](const FString& message) {
                 Callback.ExecuteIfBound(message);
             });
@@ -100,7 +102,7 @@ void ADedicatedDemoGameMode::RegisterS2SRTTCallback(FS2SRTTCallbackDelegate Call
 void ADedicatedDemoGameMode::DeregisterS2SRTTCallback()
 {
     if (pS2S != nullptr) {
-        pS2S->deregisterRTTCallback();
+        pS2S->GetRTTComms()->deregisterRTTCallback();
     }
 }
 
@@ -216,8 +218,13 @@ void ADedicatedDemoGameMode::setupWebSocket(const FString& in_url)
 {
     if (m_connectedSocket == nullptr)
     {
+        if (m_rsmClient == nullptr)
+        {
+            m_rsmClient = new BrainCloudClient();
+        }
+
         m_connectedSocket = NewObject<UWinWebSocketBase>();
-        m_connectedSocket->SetupSocket(in_url, nullptr);
+        m_connectedSocket->SetupSocket(in_url, m_rsmClient);
 
         m_connectedSocket->mCallbacks = this;
 

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "S2SRTTComms.h"
+#include "BrainCloudS2S.h"
 #include <BCClientPlugin/Private/WinWebSocketBase.h>
 #include "GameFramework/Actor.h"
 #include "Engine/EngineBaseTypes.h"
@@ -112,9 +112,11 @@ private:
 	void OnDataProcessed(const FString& message);
 	
 
-	US2SRTTComms *pS2S;
+	UBrainCloudS2S *pS2S;
 
 	UWinWebSocketBase* m_connectedSocket;
+
+	BrainCloudClient* m_rsmClient = nullptr;
 
 	FString serverName;
 	FString serverSecret;
