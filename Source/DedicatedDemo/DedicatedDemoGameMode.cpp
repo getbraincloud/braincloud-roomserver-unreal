@@ -275,23 +275,23 @@ void ADedicatedDemoGameMode::OnDataProcessed(const FString& message) {
         return;
     }
 
-    auto op = json->Values["op"]->AsString();
+    FString op = json->GetStringField(TEXT("op"));
 
     if (op == "InitS2S" && !S2SInitialized) {
-        TSharedPtr<FJsonObject> data = json->Values["data"]->AsObject();
-        
-        this->appId = data->Values["appId"]->AsString();
-        this->serverName = data->Values["serverName"]->AsString();
-        this->serverSecret = data->Values["serverSecret"]->AsString();
-        
-        UE_LOG(DedicatedServerLog, Log, TEXT("Initializing S2S with appID: %s serverName: %s serverSecret: %s"), *appId, *serverName, *serverSecret);
+        TSharedPtr<FJsonObject> data = json->GetObjectField(TEXT("data"));
+
+        this->appId = data->GetStringField(TEXT("appId"));
+        this->serverName = data->GetStringField(TEXT("serverName"));
+        this->serverSecret = data->GetStringField(TEXT("serverSecret"));
+
+        UE_LOG(DedicatedServerLog, Log, TEXT("Initializing S2S with appID: %s serverName: %s"), *appId, *serverName);
 
         InitS2S(appId, serverName, serverSecret);
     }
     if (op == "AssignLobby" && lobbyId.IsEmpty()) {
-        TSharedPtr<FJsonObject> data = json->Values["data"]->AsObject();
+        TSharedPtr<FJsonObject> data = json->GetObjectField(TEXT("data"));
 
-        this->lobbyId = data->Values["lobbyId"]->AsString();
+        this->lobbyId = data->GetStringField(TEXT("lobbyId"));
 
         UE_LOG(DedicatedServerLog, Log, TEXT("Assigned lobbyId: %s"), *lobbyId);
 
